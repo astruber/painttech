@@ -73,12 +73,30 @@
       box-shadow: 0 4px 24px rgba(5, 28, 44, 0.06);
     }
 
+    /* Logo: negativ im Bild, positiv auf weißem Balken (Überblendung) */
     .logo {
-      font-weight: 700;
-      font-size: 1.6rem;
-      letter-spacing: 0.02em;
-      line-height: 1;
+      position: relative;
+      display: block;
+      height: 46px;
+      aspect-ratio: 361.1 / 89.1;
+      transition: height .35s ease;
     }
+
+    .logo img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transition: opacity .35s ease;
+    }
+
+    .logo .logo-pos { opacity: 0; }
+
+    .nav.scrolled .logo { height: 38px; }
+    .nav.scrolled .logo .logo-neg,
+    .nav.open .logo .logo-neg { opacity: 0; }
+    .nav.scrolled .logo .logo-pos,
+    .nav.open .logo .logo-pos { opacity: 1; }
 
     .nav ul {
       list-style: none;
@@ -150,29 +168,37 @@
       overflow: hidden;
     }
 
-    /* Hintergrund-Ebene: Bild mit langsamem Zoom.
-       Später kann hier stattdessen ein <video> liegen (gleiche Klasse). */
+    /* Hintergrund-Ebene: Diashow aus mehreren Bildern (Überblendung).
+       Später kann hier stattdessen ein <video class="hero-video"> liegen. */
     .hero-media {
       position: absolute;
       inset: 0;
       z-index: 0;
+    }
+
+    .hero-slide,
+    .hero-video {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
-      background: url('img/paintgo_roboter_03.png') center / cover no-repeat;
-      transform-origin: 65% 50%;
-      animation: heroZoom 24s ease-in-out infinite alternate;
-      will-change: transform;
     }
 
-    @keyframes heroZoom {
-      from { transform: scale(1); }
-      to   { transform: scale(1.1); }
+    .hero-slide {
+      background: var(--img) var(--pos, center) / cover no-repeat;
+      opacity: 0;
+      transform: scale(1.04);
+      transition: opacity 1.6s ease, transform 8s ease-out;
+    }
+
+    .hero-slide.active {
+      opacity: 1;
+      transform: scale(1);
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .hero-media { animation: none; }
+      .hero-slide { transition: none; transform: none; }
     }
 
     /* Dezentes Overlay: links kräftiger für den Text, rechts lässt es das Bild atmen */
@@ -183,10 +209,10 @@
       z-index: 1;
       background:
         linear-gradient(90deg,
-          rgba(5, 28, 44, 0.86) 0%,
-          rgba(5, 28, 44, 0.70) 40%,
-          rgba(5, 28, 44, 0.30) 75%,
-          rgba(5, 28, 44, 0.20) 100%),
+          rgba(5, 28, 44, 0.88) 0%,
+          rgba(5, 28, 44, 0.76) 45%,
+          rgba(5, 28, 44, 0.40) 78%,
+          rgba(5, 28, 44, 0.25) 100%),
         linear-gradient(180deg,
           rgba(5, 28, 44, 0.45) 0%,
           rgba(5, 28, 44, 0) 25%);
@@ -199,32 +225,71 @@
       padding-top: var(--nav-h);
     }
 
-    .hero-text { max-width: 640px; }
+    .hero { --h1: clamp(2.6rem, 6vw, 4.6rem); }
+
+    .hero-text { max-width: 720px; }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 14px;
       font-weight: 600;
       font-size: 0.82rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--blau-hell);
-      margin-bottom: 24px;
-    }
-
-    .eyebrow::before {
-      content: '';
-      width: 32px; height: 2px;
-      background: var(--blau-hell);
+      margin-bottom: 22px;
     }
 
     .hero h1 {
+      position: relative;
       font-weight: 600;
-      font-size: clamp(2.6rem, 6vw, 4.6rem);
+      font-size: var(--h1);
       line-height: 1.04;
       letter-spacing: -0.02em;
       margin-bottom: 26px;
+    }
+
+    .hero h1 .l2 { position: relative; display: inline-block; }
+
+    /* ---------- Schrägstrich in der Headline ----------
+       Zwei Varianten, umschalten über die Klasse an <section class="hero ...">:
+       slash-before = gespiegelter Strich "/" vor der Headline, bündig mit dem übrigen Text
+       slash-after  = Original-Strich "\" aus dem Logo nach der Headline, folgt der Zeilenkante */
+    .hero h1::before,
+    .hero h1 .slash::after {
+      --h: 1.74em;              /* Höhe: Oberkante Zeile 1 bis Grundlinie Zeile 2 */
+      --t: 0.26em;              /* Strichstärke (waagrecht gemessen) */
+      --run: calc(var(--h) / 1.2167);   /* Winkel 50,6° wie im Logo: tan(50,6°) = 1,2167 */
+      position: absolute;
+      height: var(--h);
+      width: calc(var(--run) + var(--t));
+      background: var(--blau-hell);
+    }
+
+    /* Variante A: "/" vor der Headline */
+    .slash-before h1 { padding-left: calc(1.72em / 1.2167 + 0.26em + 0.28em); }
+    .slash-before h1::before {
+      content: '';
+      left: 0;
+      top: 0.17em;
+      clip-path: polygon(calc(100% - var(--t)) 0, 100% 0, var(--t) 100%, 0 100%);
+    }
+
+    /* Variante B: "\" nach der Headline.
+       .slash ist ein unsichtbarer Anker direkt nach dem Punkt, er sitzt
+       genau auf der Grundlinie – so endet der Strich unabhängig von der Schrift dort. */
+    .hero h1 .slash { display: none; }
+    .slash-after h1 .slash {
+      display: inline-block;
+      position: relative;
+      width: 0;
+      height: 0;
+      vertical-align: baseline;
+    }
+    .slash-after h1 .slash::after {
+      --gap: 1.1em;             /* Abstand Strich – Zeilenende (unten) */
+      content: '';
+      bottom: 0;
+      left: calc(var(--gap) - var(--run));
+      clip-path: polygon(0 0, var(--t) 0, 100% 100%, calc(100% - var(--t)) 100%);
     }
 
     .hero h1 em {
@@ -314,24 +379,57 @@
       display: grid;
       grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
       gap: 48px;
-      padding: 80px 0 64px;
+      padding: 80px 0 40px;
+    }
+
+    /* Logo dezent, Claim zentriert darunter */
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-self: start;
+      text-align: center;
     }
 
     .footer-logo {
-      color: #fff;
-      font-weight: 700;
-      font-size: 1.8rem;
-      letter-spacing: 0.02em;
-      line-height: 1;
-      margin-bottom: 14px;
+      display: block;
+      height: 38px;
+      width: auto;
+      margin-bottom: 12px;
     }
+
+    /* Social-Icons direkt über der Trennlinie */
+    .social {
+      display: flex;
+      gap: 10px;
+      padding-bottom: 20px;
+    }
+
+    .social a {
+      display: grid;
+      place-items: center;
+      width: 36px; height: 36px;
+      border: 1px solid var(--nachtblau-hell);
+      border-radius: 4px;
+      color: var(--silbergrau);
+      transition: color .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .social a:hover {
+      color: #fff;
+      border-color: var(--blau-hell);
+      background: var(--nachtblau-hell);
+    }
+
+    .social svg { width: 16px; height: 16px; fill: currentColor; }
 
     .footer-claim {
       font-weight: 500;
-      font-size: 0.78rem;
-      letter-spacing: 0.16em;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--silbergrau);
+      white-space: nowrap;
     }
 
     footer h4 {
@@ -378,6 +476,8 @@
 
       .burger { display: block; }
 
+      .logo, .nav.scrolled .logo { height: 36px; }
+
       .nav ul {
         position: fixed;
         top: var(--nav-h); left: 0; right: 0;
@@ -413,8 +513,8 @@
         transform: none;
       }
 
-      /* Hochformat: Bildausschnitt auf die Lackierpistole schieben */
-      .hero-media { background-position: 78% center; object-position: 78% center; transform-origin: 78% 50%; }
+      /* Hochformat: Bildausschnitt je Bild über --pos-m steuern */
+      .hero-slide { background-position: var(--pos-m, center); }
       .hero-credit { right: 22px; bottom: 20px; }
 
       .hero::before {
@@ -426,7 +526,10 @@
     }
 
     @media (max-width: 560px) {
-      .footer-top { grid-template-columns: 1fr; gap: 36px; padding: 56px 0 44px; }
+      .footer-top { grid-template-columns: 1fr; gap: 36px; padding: 56px 0 36px; }
+      .hero { --h1: 2.15rem; }
+      .slash-after h1 .slash { display: none; }   /* zu schmal für Variante B */
+      .hero h1 .l2 { display: inline; }
       .footer-bottom { flex-direction: column; }
       .scroll-hint { display: none; }
     }
@@ -437,7 +540,10 @@
   <!-- Navigation: transparent im Bild, beim Scrollen weißer, fixierter Balken -->
   <header class="nav" id="nav">
     <div class="wrap">
-      <a href="#" class="logo" aria-label="STRUBER PaintTech – Startseite">STRUBER</a>
+      <a href="#" class="logo" aria-label="STRUBER PaintTech – Startseite">
+        <img src="img/logo_spt_negativ.svg" alt="STRUBER PaintTech" class="logo-neg">
+        <img src="img/logo_spt_positiv.svg" alt="" class="logo-pos" aria-hidden="true">
+      </a>
 
       <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false">
         <span></span>
@@ -454,17 +560,21 @@
   </header>
 
   <!-- Hero -->
-  <section class="hero">
-    <!-- Hintergrund. Für ein Video später einfach ersetzen durch:
-         <video class="hero-media" src="video/hero.mp4" poster="img/paintgo_roboter_03.png"
-                autoplay muted loop playsinline></video>
-         (dann die animation in .hero-media entfernen) -->
-    <div class="hero-media" aria-hidden="true"></div>
+  <section class="hero slash-after">
+    <!-- Hintergrund: Diashow. Reihenfolge und Bildausschnitt am Handy (--pos-m) hier einstellen.
+         Für ein Video später den Inhalt von .hero-media ersetzen durch:
+         <video class="hero-video" src="video/hero.mp4" poster="img/paintgo_roboter_03.png"
+                autoplay muted loop playsinline></video> -->
+    <div class="hero-media" aria-hidden="true">
+      <div class="hero-slide active" style="--img: url('img/paintgo_roboter_03.png'); --pos-m: 78% center;"></div>
+      <div class="hero-slide" style="--img: url('img/paintgo_roboter_01.png'); --pos-m: 55% center;"></div>
+      <div class="hero-slide" style="--img: url('img/paintgo_roboter_02.png'); --pos-m: 62% center;"></div>
+    </div>
 
     <div class="wrap">
       <div class="hero-text">
         <p class="eyebrow">Painting Technology &amp; Automation</p>
-        <h1>Lackiertechnik,<br>die <em>präzise</em> arbeitet.</h1>
+        <h1><span class="l1">Lackiertechnik,</span><br><span class="l2">die <em>präzise</em> arbeitet.<span class="slash" aria-hidden="true"></span></span></h1>
         <p class="lead">
           Lackieranlagen und Automation aus einer Hand – von der Planung
           über die Inbetriebnahme bis zum Service.
@@ -487,7 +597,7 @@
     <div class="wrap">
       <div class="footer-top">
         <div class="footer-brand">
-          <div class="footer-logo">STRUBER</div>
+          <img src="img/logo_spt_negativ.svg" alt="STRUBER PaintTech" class="footer-logo">
           <p class="footer-claim">Painting Technology &amp; Automation</p>
         </div>
 
@@ -520,6 +630,16 @@
         </div>
       </div>
 
+      <div class="social">
+        <a href="https://www.instagram.com/struber_painttech/" target="_blank" rel="noopener" aria-label="STRUBER PaintTech auf Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2M12 0C8.7 0 8.3 0 7.1.1 5.8.1 4.9.3 4.1.6c-.8.3-1.5.7-2.1 1.4C1.3 2.6.9 3.3.6 4.1.3 4.9.1 5.8.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.1 1.3.3 2.1.6 2.9.3.8.7 1.5 1.4 2.1.7.7 1.3 1.1 2.1 1.4.8.3 1.6.5 2.9.6 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c1.3-.1 2.1-.3 2.9-.6.8-.3 1.5-.7 2.1-1.4.7-.7 1.1-1.3 1.4-2.1.3-.8.5-1.6.6-2.9.1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.1-1.3-.3-2.1-.6-2.9-.3-.8-.7-1.5-1.4-2.1C21.4 1.3 20.7.9 19.9.6 19.1.3 18.2.1 16.9.1 15.7 0 15.3 0 12 0Zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4ZM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.4-11.8a1.4 1.4 0 1 0 0 2.9 1.4 1.4 0 0 0 0-2.9Z"/></svg>
+        </a>
+        <!-- LinkedIn: URL der Unternehmensseite noch eintragen -->
+        <a href="https://www.linkedin.com/company/struber-painttech/" target="_blank" rel="noopener" aria-label="STRUBER PaintTech auf LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.4V9h3.4v1.6h.1c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2ZM5.3 7.4a2.1 2.1 0 1 1 0-4.1 2.1 2.1 0 0 1 0 4.1ZM7.1 20.5H3.6V9h3.5v11.5ZM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0Z"/></svg>
+        </a>
+      </div>
+
       <div class="footer-bottom">
         <span>© 2026 STRUBER PaintTech</span>
         <nav>
@@ -540,6 +660,18 @@
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+
+    // Diashow im Header
+    const slides = document.querySelectorAll('.hero-slide');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (slides.length > 1 && !reduce) {
+      let current = 0;
+      setInterval(() => {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+      }, 7000);
+    }
 
     burger.addEventListener('click', () => {
       const open = nav.classList.toggle('open');
