@@ -1,1 +1,121 @@
-<h1>Painttech</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRUBER PaintTech – Coming soon</title>
+  <meta name="description" content="STRUBER PaintTech – something new is coming.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --anthracite: 30, 33, 37;   /* #1E2125 */
+      --blue: #0A84FF;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: #fff;
+      background: rgb(var(--anthracite)) url('paintgo_roboter_03.png') center / cover no-repeat fixed;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    /* Anthrazit-Overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(var(--anthracite), 0.78);
+      z-index: 0;
+    }
+
+    main, footer { position: relative; z-index: 1; }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+
+    h1 {
+      font-size: clamp(2.6rem, 8vw, 6.5rem);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      font-weight: 700;
+    }
+
+    h1 span { font-weight: 200; }
+
+    .line {
+      width: 64px;
+      height: 3px;
+      background: var(--blue);
+      margin: 2rem auto 1.6rem;
+      border-radius: 2px;
+      box-shadow: 0 0 18px rgba(10, 132, 255, 0.7);
+    }
+
+    .tagline {
+      font-size: clamp(1rem, 2.2vw, 1.45rem);
+      font-weight: 300;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    footer {
+      background: var(--blue);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.8rem;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    footer strong { font-weight: 700; }
+
+    @media (max-width: 480px) {
+      footer { font-size: 0.72rem; padding: 0.6rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <h1>STRUBER <span>PaintTech</span></h1>
+    <div class="line"></div>
+    <p class="tagline">Something new is coming.</p>
+  </main>
+
+  <footer>
+    <a href="https://blutech.ch" target="_blank" rel="noopener">© <span id="year">2026</span> powered by <strong>BLUTECH</strong></a>
+    <a href="https://painttech.at" target="_blank" rel="noopener">painttech.at</a>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
