@@ -1,117 +1,558 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STRUBER PaintTech – Coming soon</title>
-  <meta name="description" content="STRUBER PaintTech – something new is coming.">
+  <title>STRUBER PaintTech – Painting Technology &amp; Automation</title>
+  <meta name="description" content="STRUBER PaintTech – Lackieranlagen und Automation.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --anthracite: 30, 33, 37;   /* #1E2125 */
-      --blue: #0A84FF;
+      --anthrazit: #425563;
+      --anthrazit-dunkel: #333F48;
+      --blau: #0085CA;
+      --blau-hell: #009CDE;
+      --blau-tief: #006BA6;
+      --nachtblau: #051C2C;
+      --nachtblau-hell: #12293A;
+      --schiefer: #768692;
+      --silbergrau: #98A4AE;
+      --hellgrau: #E4E8EC;
+      --nebelgrau: #F3F5F7;
+      --nav-h: 80px;
+      --max: 1240px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html, body { height: 100%; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
-      color: #fff;
-      background: rgb(var(--anthracite)) url('paintgo_roboter_03.png') center / cover no-repeat fixed;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      min-height: 100dvh;
+      font-family: 'Barlow', Arial, sans-serif;
+      color: var(--anthrazit-dunkel);
+      background: #fff;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Anthrazit-Overlay */
-    body::before {
-      content: '';
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ---------- Navigation ---------- */
+    .nav {
       position: fixed;
-      inset: 0;
-      background: rgba(var(--anthracite), 0.78);
-      z-index: 0;
-    }
-
-    main, footer { position: relative; z-index: 1; }
-
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 2rem 1.5rem;
-    }
-
-    h1 {
-      font-size: clamp(2.6rem, 8vw, 6.5rem);
-      line-height: 1;
-      letter-spacing: -0.01em;
-      font-weight: 700;
-    }
-
-    h1 span { font-weight: 200; }
-
-    .line {
-      width: 64px;
-      height: 3px;
-      background: var(--blue);
-      margin: 2rem auto 1.6rem;
-      border-radius: 2px;
-      box-shadow: 0 0 18px rgba(10, 132, 255, 0.7);
-    }
-
-    .tagline {
-      font-size: clamp(1rem, 2.2vw, 1.45rem);
-      font-weight: 300;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      opacity: 0.9;
-    }
-
-    footer {
-      background: var(--blue);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.7rem 1.5rem;
-      font-size: 0.8rem;
-      font-weight: 300;
-      letter-spacing: 0.04em;
-    }
-
-    footer a {
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: var(--nav-h);
       color: #fff;
-      text-decoration: none;
+      background: transparent;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+      transition: background .35s ease, color .35s ease, height .35s ease,
+                  border-color .35s ease, box-shadow .35s ease;
     }
 
-    footer a:hover { text-decoration: underline; }
+    .nav .wrap {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-    footer strong { font-weight: 700; }
+    .nav.scrolled {
+      --nav-h: 68px;
+      background: #fff;
+      color: var(--anthrazit-dunkel);
+      border-bottom-color: var(--hellgrau);
+      box-shadow: 0 4px 24px rgba(5, 28, 44, 0.06);
+    }
 
-    @media (max-width: 480px) {
-      footer { font-size: 0.72rem; padding: 0.6rem 1rem; }
+    .logo {
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .nav ul {
+      list-style: none;
+      display: flex;
+      gap: 36px;
+    }
+
+    .nav ul a {
+      font-weight: 500;
+      font-size: 0.98rem;
+      position: relative;
+      padding: 6px 0;
+      transition: color .2s ease;
+    }
+
+    .nav ul a::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: -2px;
+      height: 2px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .25s ease;
+    }
+
+    .nav ul a:hover::after { transform: scaleX(1); }
+
+    .nav ul a.active { color: var(--blau-hell); }
+    .nav.scrolled ul a.active { color: var(--blau); }
+
+    .burger {
+      display: none;
+      background: none;
+      border: 0;
+      color: inherit;
+      width: 40px; height: 40px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .burger span,
+    .burger span::before,
+    .burger span::after {
+      position: absolute;
+      left: 8px; right: 8px;
+      height: 2px;
+      background: currentColor;
+      content: '';
+      transition: transform .25s ease, opacity .25s ease;
+    }
+    .burger span { top: 19px; }
+    .burger span::before { top: -7px; left: 0; right: 0; }
+    .burger span::after  { top:  7px; left: 0; right: 0; }
+
+    .nav.open .burger span { background: transparent; }
+    .nav.open .burger span::before { transform: translateY(7px) rotate(45deg); }
+    .nav.open .burger span::after  { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      color: #fff;
+      background: var(--nachtblau);
+      overflow: hidden;
+    }
+
+    /* Hintergrund-Ebene: Bild mit langsamem Zoom.
+       Später kann hier stattdessen ein <video> liegen (gleiche Klasse). */
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      background: url('img/paintgo_roboter_03.png') center / cover no-repeat;
+      transform-origin: 65% 50%;
+      animation: heroZoom 24s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    @keyframes heroZoom {
+      from { transform: scale(1); }
+      to   { transform: scale(1.1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-media { animation: none; }
+    }
+
+    /* Dezentes Overlay: links kräftiger für den Text, rechts lässt es das Bild atmen */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg,
+          rgba(5, 28, 44, 0.86) 0%,
+          rgba(5, 28, 44, 0.70) 40%,
+          rgba(5, 28, 44, 0.30) 75%,
+          rgba(5, 28, 44, 0.20) 100%),
+        linear-gradient(180deg,
+          rgba(5, 28, 44, 0.45) 0%,
+          rgba(5, 28, 44, 0) 25%);
+    }
+
+    .hero .wrap {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      padding-top: var(--nav-h);
+    }
+
+    .hero-text { max-width: 640px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blau-hell);
+      margin-bottom: 24px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      width: 32px; height: 2px;
+      background: var(--blau-hell);
+    }
+
+    .hero h1 {
+      font-weight: 600;
+      font-size: clamp(2.6rem, 6vw, 4.6rem);
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+      margin-bottom: 26px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--blau-hell);
+    }
+
+    .hero .lead {
+      font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.86);
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+
+    .buttons { display: flex; flex-wrap: wrap; gap: 14px; }
+
+    .btn {
+      display: inline-block;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 11px 20px;
+      border-radius: 4px;
+      border: 1.5px solid transparent;
+      transition: background .2s ease, border-color .2s ease, color .2s ease;
+    }
+
+    .btn-primary { background: var(--blau-tief); color: #fff; }
+    .btn-primary:hover { background: var(--blau); }
+
+    .btn-outline { border-color: rgba(255, 255, 255, 0.7); color: #fff; }
+    .btn-outline:hover { background: #fff; color: var(--anthrazit-dunkel); border-color: #fff; }
+
+    .scroll-hint {
+      position: absolute;
+      left: 50%; bottom: 32px;
+      transform: translateX(-50%);
+      width: 26px; height: 42px;
+      border: 1.5px solid rgba(255, 255, 255, 0.55);
+      border-radius: 14px;
+    }
+    .scroll-hint::after {
+      content: '';
+      position: absolute;
+      left: 50%; top: 8px;
+      width: 3px; height: 8px;
+      margin-left: -1.5px;
+      border-radius: 2px;
+      background: #fff;
+      animation: scroll 1.8s ease-in-out infinite;
+    }
+    .hero-credit {
+      position: absolute;
+      right: 32px; bottom: 28px;
+      z-index: 2;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.55);
+      transition: color .2s ease;
+    }
+    .hero-credit strong { font-weight: 600; }
+    .hero-credit:hover { color: rgba(255, 255, 255, 0.9); }
+
+    .scroll-hint { z-index: 2; }
+
+    @keyframes scroll {
+      0%   { opacity: 0; transform: translateY(0); }
+      30%  { opacity: 1; }
+      100% { opacity: 0; transform: translateY(14px); }
+    }
+
+    /* ---------- Inhalt (Platzhalter) ---------- */
+    main {
+      background: #fff;
+      min-height: 70vh;
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      background: var(--nachtblau);
+      color: var(--silbergrau);
+      font-size: 0.95rem;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+      gap: 48px;
+      padding: 80px 0 64px;
+    }
+
+    .footer-logo {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .footer-claim {
+      font-weight: 500;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--silbergrau);
+    }
+
+    footer h4 {
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    footer ul { list-style: none; }
+    footer li { margin-bottom: 10px; }
+
+    footer ul a { color: var(--silbergrau); transition: color .2s ease; }
+    footer ul a:hover { color: #fff; }
+
+    footer address { font-style: normal; line-height: 1.6; margin-bottom: 14px; }
+    footer .contact-link { color: var(--silbergrau); transition: color .2s ease; }
+    footer .contact-link:hover { color: var(--blau-hell); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--nachtblau-hell);
+      padding: 22px 0 28px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: var(--schiefer);
+    }
+
+    .footer-bottom nav { display: flex; gap: 24px; }
+    .footer-bottom a:hover { color: var(--silbergrau); }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 960px) {
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 860px) {
+      .wrap { padding: 0 22px; }
+
+      .burger { display: block; }
+
+      .nav ul {
+        position: fixed;
+        top: var(--nav-h); left: 0; right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: #fff;
+        padding: 8px 22px 20px;
+        border-bottom: 1px solid var(--hellgrau);
+        box-shadow: 0 12px 24px rgba(5, 28, 44, 0.08);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: opacity .25s ease, transform .25s ease, visibility .25s;
+      }
+
+      .nav ul a {
+        display: block;
+        padding: 14px 0;
+        color: var(--anthrazit-dunkel);
+        border-bottom: 1px solid var(--hellgrau);
+      }
+      .nav ul li:last-child a { border-bottom: 0; }
+      .nav ul a::after { display: none; }
+      .nav ul a.active { color: var(--blau); }
+
+      .nav.open {
+        background: #fff;
+        color: var(--anthrazit-dunkel);
+      }
+      .nav.open ul {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+      }
+
+      /* Hochformat: Bildausschnitt auf die Lackierpistole schieben */
+      .hero-media { background-position: 78% center; object-position: 78% center; transform-origin: 78% 50%; }
+      .hero-credit { right: 22px; bottom: 20px; }
+
+      .hero::before {
+        background: linear-gradient(180deg,
+          rgba(5, 28, 44, 0.65) 0%,
+          rgba(5, 28, 44, 0.60) 60%,
+          rgba(5, 28, 44, 0.45) 100%);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .footer-top { grid-template-columns: 1fr; gap: 36px; padding: 56px 0 44px; }
+      .footer-bottom { flex-direction: column; }
+      .scroll-hint { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <main>
-    <h1>STRUBER <span>PaintTech</span></h1>
-    <div class="line"></div>
-    <p class="tagline">Something new is coming.</p>
-  </main>
+  <!-- Navigation: transparent im Bild, beim Scrollen weißer, fixierter Balken -->
+  <header class="nav" id="nav">
+    <div class="wrap">
+      <a href="#" class="logo" aria-label="STRUBER PaintTech – Startseite">STRUBER</a>
 
+      <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span>
+      </button>
+
+      <ul id="menu">
+        <li><a href="#">Lackieranlagen</a></li>
+        <li><a href="#">Automation</a></li>
+        <li><a href="#">Service</a></li>
+        <li><a href="#">Referenzen</a></li>
+        <li><a href="#">Kontakt</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <!-- Hintergrund. Für ein Video später einfach ersetzen durch:
+         <video class="hero-media" src="video/hero.mp4" poster="img/paintgo_roboter_03.png"
+                autoplay muted loop playsinline></video>
+         (dann die animation in .hero-media entfernen) -->
+    <div class="hero-media" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="hero-text">
+        <p class="eyebrow">Painting Technology &amp; Automation</p>
+        <h1>Lackiertechnik,<br>die <em>präzise</em> arbeitet.</h1>
+        <p class="lead">
+          Lackieranlagen und Automation aus einer Hand – von der Planung
+          über die Inbetriebnahme bis zum Service.
+        </p>
+        <div class="buttons">
+          <a href="#" class="btn btn-primary">Projekt anfragen</a>
+          <a href="#" class="btn btn-outline">Referenzen</a>
+        </div>
+      </div>
+    </div>
+    <span class="scroll-hint" aria-hidden="true"></span>
+    <a href="https://blutech.ch" target="_blank" rel="noopener" class="hero-credit">powered by <strong>BLUTECH</strong></a>
+  </section>
+
+  <!-- Inhalt: wird später befüllt -->
+  <main></main>
+
+  <!-- Footer -->
   <footer>
-    <a href="https://painttech.at" target="_blank" rel="noopener">painttech.at</a>
-    <a href="https://blutech.ch" target="_blank" rel="noopener">powered by <strong>BLUTECH</strong> ©</a>
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">STRUBER</div>
+          <p class="footer-claim">Painting Technology &amp; Automation</p>
+        </div>
+
+        <div>
+          <h4>Leistungen</h4>
+          <ul>
+            <li><a href="#">Lackieranlagen</a></li>
+            <li><a href="#">Automation</a></li>
+            <li><a href="#">Service</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Unternehmen</h4>
+          <ul>
+            <li><a href="#">Über uns</a></li>
+            <li><a href="#">Referenzen</a></li>
+            <li><a href="#">Karriere</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Kontakt</h4>
+          <address>
+            STRUBER PaintTech<br>
+            Michaelbeuern 93<br>
+            5152 Michaelbeuern
+          </address>
+          <a href="tel:+4368110659204" class="contact-link">+43-681-10 65 92 04</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 STRUBER PaintTech</span>
+        <nav>
+          <a href="#">Impressum</a>
+          <a href="#">Datenschutz</a>
+          <a href="https://blutech.ch" target="_blank" rel="noopener">powered by BLUTECH</a>
+        </nav>
+      </div>
+    </div>
   </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    const burger = document.getElementById('burger');
+
+    function onScroll() {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    burger.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open);
+      burger.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+    });
+
+    document.querySelectorAll('#menu a').forEach(a =>
+      a.addEventListener('click', () => {
+        nav.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      })
+    );
+  </script>
 </body>
 </html>
